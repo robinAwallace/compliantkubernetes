@@ -1,8 +1,8 @@
-name: deploy-main
+name: deploy-release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ release-* ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,7 +22,16 @@ jobs:
       - name: Configure Git user
         run: git fetch origin gh-pages --depth=1
 
-      - name: Deploy with mike 🚀
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - id: get-tag
         run: |
-          mike deploy compliantkubernetes ck8s -t 'main'
-          mike set-default compliantkubernetes --push
+          tag=$(echo ${{ steps.extract_branch.outputs.branch }} | cut -d- -f2)
+          echo "::set-output name=tag::$tag"
+      - run: echo "${{steps.get-tag.outputs.tag}}"
+
+      - name: Deploy with mike 🚀
+        run: mike deploy --push ${{ steps.extract_branch.outputs.branch }} -t '${{steps.get-tag.outputs.tag}}'
