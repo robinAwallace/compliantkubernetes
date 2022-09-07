@@ -40,12 +40,10 @@ jobs:
       - name: test
         if: contains('rw/versioning', github.ref)
         run: echo found you!
-        id: set-tag
 
       - name: test2
         if: contains('main', github.ref)
         run: echo no i found you!
-        id: set-tag
 
       - name: Deploy with mike 🚀
         run: mike deploy --push robin-v3 -t 'v3'
