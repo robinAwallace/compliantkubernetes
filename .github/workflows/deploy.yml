@@ -28,14 +28,15 @@ jobs:
         id: extract_branch
 
       - name: Show github.ref
-        run: echo '{{ github.ref }}'
+        run: echo {{ github.ref }}
 
       - name: Show branch
-        run: echo '{{ steps.extract_branch.outputs.branch  }}'
+        run: echo {{ steps.extract_branch.outputs.branch  }}
 
-      - name: Set tag for version
-        run: echo '::set-output name=tag::{{ steps.extract_branch.outputs.branch }}''
-        id: set-tag
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
 
       - name: test
         if: contains('rw/versioning', github.ref)
