@@ -25,7 +25,7 @@ jobs:
       - name: Get branch
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: steps.extract_branch.outputs.branch 
+        id: extract_branch
 
       - name: Show github.ref
         run: echo '{{ github.ref }}'
