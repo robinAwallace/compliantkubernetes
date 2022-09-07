@@ -22,5 +22,30 @@ jobs:
       - name: Configure Git user
         run: git fetch origin gh-pages --depth=1
 
+      - name: Get branch
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: steps.extract_branch.outputs.branch 
+
+      - name: Show github.ref
+        run: echo '{{ github.ref }}'
+
+      - name: Show branch
+        run: echo '{{ steps.extract_branch.outputs.branch  }}'
+
+      - name: Set tag for version
+        run: echo '::set-output name=tag::{{ steps.extract_branch.outputs.branch }}''
+        id: set-tag
+
+      - name: test
+        if: contains('rw/versioning', github.ref)
+        run: echo found you!
+        id: set-tag
+
+      - name: test2
+        if: contains('main', github.ref)
+        run: echo no i found you!
+        id: set-tag
+
       - name: Deploy with mike 🚀
         run: mike deploy --push robin-v3 -t 'v3'
