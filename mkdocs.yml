@@ -41,6 +41,12 @@ extra_css:
 plugins:
   - include-markdown
   - search
+  - mike:
+      # these fields are all optional; the defaults are as below...
+      version_selector: true   # set to false to leave out the version selector
+      css_dir: css             # the directory to put the version selector's CSS
+      javascript_dir: js       # the directory to put the version selector's JS
+      canonical_version: null
   - tags:
       tags_file: ciso-guide/controls.md
 
@@ -59,6 +65,10 @@ markdown_extensions:
       toc_depth: 0
   - pymdownx.tasklist:
       custom_checkbox: true
+
+extra:
+  version:
+    provider: mike
 
 nav:
   - Overview: 'index.md'
