@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ rw/versioning ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Python dependencies
+        run: python3 -m pip install -r ./requirements.txt
+
+      - name: Deploy with mike 🚀
+        run: mike deploy --push robin-v3 -t 'v3'
