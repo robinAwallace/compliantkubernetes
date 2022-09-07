@@ -22,7 +22,7 @@ jobs:
       - name: Configure Git user
         run: git fetch origin gh-pages --depth=1
 
-      - name: Get branch
+      - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
@@ -32,11 +32,6 @@ jobs:
 
       - name: Show branch
         run: echo {{ steps.extract_branch.outputs.branch  }}
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
 
       - name: test
         if: contains('rw/versioning', github.ref)
