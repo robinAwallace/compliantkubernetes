@@ -28,10 +28,10 @@ jobs:
         id: extract_branch
 
       - name: Show github.ref
-        run: echo {{ github.ref }}
+        run: echo ${{ github.ref }}
 
       - name: Show branch
-        run: echo {{ steps.extract_branch.outputs.branch  }}
+        run: echo ${{ steps.extract_branch.outputs.branch  }}
 
       - name: test
         if: contains('rw/versioning', github.ref)
