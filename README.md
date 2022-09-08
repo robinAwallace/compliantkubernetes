@@ -29,6 +29,7 @@ sudo apt-get install graphviz make
 * [mkdocs-material](https://squidfunk.github.io/mkdocs-material/)
 * [GitHub Pages](https://pages.github.com/)
 * [Graphviz](https://graphviz.org/)
+* [mike](https://github.com/jimporter/mike)
 
 ## Deployment
 
