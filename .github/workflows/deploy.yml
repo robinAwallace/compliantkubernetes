@@ -33,5 +33,6 @@ jobs:
               VERSION_TITLE=$(echo "$GITHUB_REF_NAME" | cut -d- -f2)
               VERSION="compliantkubernetes-${VERSION_TITLE}"
           fi
+          echo version: $VERSION version-title: $VERSION_TITLE
           mike deploy $VERSION ck8s -t $VERSION_TITLE
           mike set-default compliantkubernetes --push
