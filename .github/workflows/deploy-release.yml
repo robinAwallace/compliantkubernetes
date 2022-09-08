@@ -4,7 +4,6 @@ on:
   push:
     branches: [ release-* ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,7 +18,7 @@ jobs:
           git config --local user.email "${GITHUB_ACTOR}@users.noreply.${GITHUB_DOMAIN:-"github.com"}"
           git config --local user.name "${GITHUB_ACTOR}"
 
-      - name: Configure Git user
+      - name: Fetch gh-pages
         run: git fetch origin gh-pages --depth=1
 
       - name: Extract branch name
@@ -33,5 +32,5 @@ jobs:
           echo "::set-output name=tag::$tag"
       - run: echo "${{steps.get-tag.outputs.tag}}"
 
-      - name: Deploy with mike 🚀
+      - name: Deploy with mike
         run: mike deploy --push ${{ steps.extract_branch.outputs.branch }} -t '${{steps.get-tag.outputs.tag}}'

@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,10 +18,10 @@ jobs:
           git config --local user.email "${GITHUB_ACTOR}@users.noreply.${GITHUB_DOMAIN:-"github.com"}"
           git config --local user.name "${GITHUB_ACTOR}"
 
-      - name: Configure Git user
+      - name: Fetch gh-pages
         run: git fetch origin gh-pages --depth=1
 
-      - name: Deploy with mike 🚀
+      - name: Deploy with mike
         run: |
           mike deploy compliantkubernetes ck8s -t 'main'
           mike set-default compliantkubernetes --push
