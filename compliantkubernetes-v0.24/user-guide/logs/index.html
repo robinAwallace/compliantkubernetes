@@ -1,0 +1,2041 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="How to work with logs in Elastisys Compliant Kubernetes, the security-focused Kubernetes distribution.">
+      
+      
+        <meta name="author" content="Elastisys AB">
+      
+      
+        <link rel="canonical" href="https://elastisys.io/compliantkubernetes-v0.24/user-guide/logs/">
+      
+      <link rel="icon" href="../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.3">
+    
+    
+      
+        <title>Logs - Elastisys Compliant Kubernetes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6b80c2a2.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/branding.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://matomo.elastisys.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '2']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+    
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  img-src 'self' data:;
+  connect-src 'self' https://matomo.elastisys.com/;
+  script-src 'self' 'unsafe-inline';
+">
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="elastisys" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Elastisys Compliant Kubernetes" class="md-header__button md-logo" aria-label="Elastisys Compliant Kubernetes" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elastisys Compliant Kubernetes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Logs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+
+<a
+  href="https://github.com/elastisys/compliantkubernetes"
+  title="Go to repository"
+  style="display: block; font-size: .65rem; line-height: 1.2; white-space: nowrap; -webkit-backface-visibility: hidden; backface-visibility: hidden; transition: opacity 250ms;"
+>
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Elastisys Compliant Kubernetes" class="md-nav__button md-logo" aria-label="Elastisys Compliant Kubernetes" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    Elastisys Compliant Kubernetes
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+<a
+  href="https://github.com/elastisys/compliantkubernetes"
+  title="Go to repository"
+  style="display: block; font-size: .65rem; line-height: 1.2; white-space: nowrap; -webkit-backface-visibility: hidden; backface-visibility: hidden; transition: opacity 250ms;"
+>
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          For Application Developers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="For Application Developers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          For Application Developers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_1">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prepare/" class="md-nav__link">
+        Step 1: Prepare
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy/" class="md-nav__link">
+        Step 2: Deploy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operate/" class="md-nav__link">
+        Step 3: Operate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_2">
+          Go Deeper
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Go Deeper" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          Go Deeper
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prepare-application/" class="md-nav__link">
+        Prepare Your Application
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../registry/" class="md-nav__link">
+        Container registry
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../network-model/" class="md-nav__link">
+        Network Model
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes-api/" class="md-nav__link">
+        Kubernetes API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes-ui/" class="md-nav__link">
+        Kubernetes UI (Lens)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Logs
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../log-based-alerts/" class="md-nav__link">
+        Log-based Alerts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics/" class="md-nav__link">
+        Metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alerts/" class="md-nav__link">
+        Metric Alerts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintenance/" class="md-nav__link">
+        Maintenance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backup/" class="md-nav__link">
+        Backups
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci-cd/" class="md-nav__link">
+        CI/CD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demarcation/" class="md-nav__link">
+        Demarcation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../delegation/" class="md-nav__link">
+        How to Delegate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          Safeguards
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Safeguards" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Safeguards
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safeguards/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safeguards/enforce-no-root/" class="md-nav__link">
+        Enforce No Root
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safeguards/enforce-networkpolicies/" class="md-nav__link">
+        Enforce NetworkPolicies
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safeguards/enforce-resources/" class="md-nav__link">
+        Enforce Resources
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safeguards/enforce-trusted-registries/" class="md-nav__link">
+        Enforce Trusted Registries
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_4" type="checkbox" id="__nav_2_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_4">
+          Additional Services
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Additional Services" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_4">
+          <span class="md-nav__icon md-icon"></span>
+          Additional Services
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-services/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-services/postgresql/" class="md-nav__link">
+        PostgreSQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-services/timescaledb/" class="md-nav__link">
+        TimescaleDB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-services/redis/" class="md-nav__link">
+        Redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-services/rabbitmq/" class="md-nav__link">
+        RabbitMQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../go-live/" class="md-nav__link">
+        Go-live Checklist
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          For Kubernetes Administrators
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="For Kubernetes Administrators" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          For Kubernetes Administrators
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/provider-audit/" class="md-nav__link">
+        Provider Audit
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Creating/Destroying/Upgrading a Cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Creating/Destroying/Upgrading a Cluster" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Creating/Destroying/Upgrading a Cluster
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/aws/" class="md-nav__link">
+        On AWS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/azure/" class="md-nav__link">
+        On Azure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/exoscale/" class="md-nav__link">
+        On Exoscale
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/gcp/" class="md-nav__link">
+        On GCP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/openstack/" class="md-nav__link">
+        On Openstack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/safespring/" class="md-nav__link">
+        On Safespring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/ovh-managed-kubernetes/" class="md-nav__link">
+        On OVH Managed Kubernetes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/eksd/" class="md-nav__link">
+        On EKS-D
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/clean-up/" class="md-nav__link">
+        Remove Compliant Kubernetes Apps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/qa/" class="md-nav__link">
+        QA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_6">
+          Advanced Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Configuration" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Configuration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/configure/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/cluster-sizing/" class="md-nav__link">
+        Sizing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/ingress/" class="md-nav__link">
+        Ingress
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/access-control/" class="md-nav__link">
+        Access Control
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/user-alerts/" class="md-nav__link">
+        User Alerts
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/disaster-recovery/" class="md-nav__link">
+        Disaster Recovery
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/break-glass/" class="md-nav__link">
+        Breaking the Glass
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/credentials/" class="md-nav__link">
+        Use of Credentials
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/capacity-management/" class="md-nav__link">
+        Capacity Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/maintenance/" class="md-nav__link">
+        Maintenance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-manual/faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          For CISOs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="For CISOs" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          For CISOs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/controls/" class="md-nav__link">
+        ISO 27001 and BSI IT-Grundschutz
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/audit-logs/" class="md-nav__link">
+        Audit Logs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/backup/" class="md-nav__link">
+        Backup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/cryptography/" class="md-nav__link">
+        Cryptography
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/intrusion-detection/" class="md-nav__link">
+        Intrusion Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/policy-as-code/" class="md-nav__link">
+        Policy-as-Code
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/capacity-management/" class="md-nav__link">
+        Capacity Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/vulnerability/" class="md-nav__link">
+        Vulnerability Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/log-review/" class="md-nav__link">
+        Log Review
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          For Contributors
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="For Contributors" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          For Contributors
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributor-guide/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/" class="md-nav__link">
+        Architectural Decision Log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-radar/" class="md-nav__link">
+        Tech Radar
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Release Notes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Release Notes" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Release Notes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/ck8s/" class="md-nav__link">
+        Compliant Kubernetes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/kubespray/" class="md-nav__link">
+        CK8S Kubespray
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/postgres/" class="md-nav__link">
+        CK8S PostgreSQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/rabbitmq/" class="md-nav__link">
+        CK8S RabbitMQ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/redis/" class="md-nav__link">
+        CK8S Redis
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elastisys.com/" class="md-nav__link">
+        Support ⧉
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elastisys.com/blog/" class="md-nav__link">
+        Blog ⧉
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  
+
+  <nav class="md-tags" >
+    
+      
+        <a href="../../ciso-guide/controls/#iso-27001-a1241" class="md-tag">
+          ISO 27001 A.12.4.1
+        </a>
+      
+    
+      
+        <a href="../../ciso-guide/controls/#iso-27001-a1243" class="md-tag">
+          ISO 27001 A.12.4.3
+        </a>
+      
+    
+      
+        <a href="../../ciso-guide/controls/#iso-27001-a16" class="md-tag">
+          ISO 27001 A.16
+        </a>
+      
+    
+  </nav>
+
+
+
+  <a href="https://github.com/elastisys/compliantkubernetes/edit/main/docs/user-guide/logs.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h1>
+<p>Compliant Kubernetes (CK8s) provides the mechanism to manage your cluster as well as  the lifecycle of thousands of containerized applications deployed in  the cluster. The resources managed by CK8s are expected to be highly distributed with dynamic behaviors. An instance of CK8s cluster  environment involves several components with  nodes that host hundreds of containers that are constantly being spun up and destroyed based on workloads.</p>
+<p>When dealing with a large pool of containerized applications and workloads in CK8s, it is imperative to be proactive with continuous monitoring and debugging information in order to observe what is going on the cluster. These information can be seen at the container, node, or cluster level.  Logging as one of the <a href="https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html#:~:text=Logs%2C%20metrics%2C%20and%20traces%20are,ability%20to%20build%20better%20systems.">three pillars of observability</a> is a crucial element to manage and monitor services and infrastructure. It allows you to track debugging information at different levels of granularity.</p>
+<h2 id="compliance-needs">Compliance needs<a class="headerlink" href="#compliance-needs" title="Permanent link">&para;</a></h2>
+<p>The requirements to comply with ISO 27001 are stated in ISO <a href="https://www.isms.online/iso-27001/">27001:2013</a>. The annexes that mostly concerns logging are:</p>
+<ul>
+<li><a href="https://www.isms.online/iso-27001/annex-a-12-operations-security/">Annex 12</a>, article A.12.4.1 "Event Logging" and A.12.4.3 "Administrator and Operator Logs".</li>
+<li><a href="https://www.isms.online/iso-27001/annex-a-16-information-security-incident-management/">Annex 16</a> which deals with incident management.</li>
+</ul>
+<p>In Compliant Kubernetes, OpenSearch is separate from the production workload, hence it complies with A.12.4.2 "Protection of Log Information". The cloud provider should ensure that the clock of Kubernetes nodes is synchronized, hence complying with A.12.4.4 "Clock Synchronisation".</p>
+<h2 id="opensearch">OpenSearch<a class="headerlink" href="#opensearch" title="Permanent link">&para;</a></h2>
+<p>Raw logs in CK8s are normalized, filtered, and processed by <a href="https://www.fluentd.org/">fluentd</a> and shipped to <a href="https://opensearch.org/">OpenSearch</a> for storage and analysis. OpenSearch is derived from the fully open source version of Elasticsearch called  <a href="https://logz.io/blog/open-distro-for-elasticsearch/">Open Distro for Elasticsearch</a>.</p>
+<p>OpenSearch provides a powerful, easy-to-use event monitoring and alerting system, enabling you to monitor, search, visualize your data among other things. OpenSearch Dashboards is used as visualization and analysis interface for OpenSearch for all your logs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compliant Kubernetes v0.18 and earlier used Open Distro for Elasticsearch, providing fully open source versions of Elasticsearch and Kibana. This project has now reached end of life and continues through OpenSearch, replacing Elasticsearch with OpenSearch and Kibana with OpenSearch Dashboards. Although a big change for the project, it still remains highly compatible and with minor differences in features and user experience.</p>
+</div>
+<h2 id="visualization-using-opensearch-dashboards">Visualization using OpenSearch Dashboards<a class="headerlink" href="#visualization-using-opensearch-dashboards" title="Permanent link">&para;</a></h2>
+<p>OpenSearch Dashboards is used as a data visualization and exploration tool for log time-series  and aggregate analytics. It offers powerful and easy-to-use features such as histograms, line graphs, pie charts, heat maps, and built-in geospatial support.</p>
+<p>When you log into OpenSearch Dashboards, you will start at the home page as shown below.</p>
+<p><img alt="OpenSearch Dashboards" src="../../img/osd-home.png" /></p>
+<p>From here click "Visualize &amp; analyze" to continue and you will be greeted with the options to go forward to either <strong>Dashboard</strong> or <strong>Discover</strong>. Opening the sidebar in the top left will also provide navigation to OpenSearch Dashboards features, and here <strong>Visualize</strong> can be found in addition to the two former two outlined in the page shown below.</p>
+<p><img alt="OpenSearch Dashboards Sidebar" src="../../img/osd-sidebar.png" /></p>
+<p>Since we are concerned with searching logs and their visualization, we will focus on these three features indicated by the red rectangle in the figure above. If you are interested to know more about the rest please visit the <a href="https://opensearch.org/docs/latest/dashboards/index/">official OpenSearch Dashboards documentation</a>.</p>
+<p>Before we dive in further, let us discuss the type of logs ingested into OpenSearch. Logs in CK8s cluster are filtered and indexed by fluentd into four categories.</p>
+<p><strong>Application level logs</strong></p>
+<ul>
+<li>
+<p><strong>Kubeaudit logs</strong> related to <a href="https://kubernetes.io/docs/tasks/debug-application-cluster/audit/">Kubernetes audits</a> to provide security-relevant chronological set of records documenting the sequence of activities that have affected system by individual users, administrators or other components of the system. This is mostly related to the ISO 27001 requirement A.12.4.3 "Administrator and Operator Logs".</p>
+</li>
+<li>
+<p><strong>Kubernetes logs</strong> that provide insight into CK8s resources such as Nodes, Pods, Containers, Deployments and ReplicaSets. This allows you to observe the interactions between those resources and see the effects that one action has on another. Generally, logs in the CK8s ecosystem can be divided into the cluster level (logs outputted by components such as the kubelet, the API server, the scheduler) and the application level (logs generated by pods and containers). This is mostly related to the ISO 27001 requirement A.12.4.3 "Administrator and Operator Logs".</p>
+</li>
+</ul>
+<p><strong>Platform level logs</strong></p>
+<ul>
+<li>
+<p><strong>Authlog</strong> includes information about system authorization, along with user logins and the authentication mechanism that were used. Such as SSH access to the Nodes. This is mostly related to the ISO 27001 requirement A.12.4.3 "Administrator and Operator Logs".</p>
+</li>
+<li>
+<p><strong>Others</strong> logs other than the above two are indexed and shipped to OpenSearch as <em>others</em>. These logs are collected from the Node's <a href="https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html#"><code>journald</code></a> logging system.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Users</strong> can only view the logs of <strong>kubernetes</strong> and <strong>kubeaudit</strong>. <strong>authlog</strong> and <strong>others</strong> are for Compliant Kubernetes administrators.</p>
+</div>
+<p>Let us dive into it then.</p>
+<h3 id="data-visualization-and-exploration">Data Visualization and Exploration<a class="headerlink" href="#data-visualization-and-exploration" title="Permanent link">&para;</a></h3>
+<p>As you can see in the figure above, data visualization and exploration in OpenSearch Dashboards has three components: <strong>Discover</strong>, <strong>Visualize</strong> and <strong>Dashboard</strong>. The following section describes each components using examples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These following examples were created for Open Distro for Elasticsearch and Kibana, however the user experience is the same when using OpenSearch Dashboards.</p>
+</div>
+<h4 id="discover">Discover<a class="headerlink" href="#discover" title="Permanent link">&para;</a></h4>
+<p>The <strong>Discover</strong> component in OpenSearch Dashboards is used for exploring, searching and filtering logs.</p>
+<p>Navigate to <strong>Discover</strong> as shown previously to access the features provided by it. The figure below shows partial view of the page that you will get under <strong>Discover</strong>.</p>
+<p><img alt="Discover" src="../../img/discover.png" /></p>
+<p>As you can see in the above figure, the <strong>kubeaudit</strong> index logs are loaded by default. If you want to explore logs from either of the other two log indices please select the right index under the dropdown menu marked <em>log index category</em>.</p>
+<p>To appreciate the searching and filtering capability, let us get data for the following question:</p>
+<p><strong>Get all logs that were collected for the past 20 hours in host 172.16.0.3 where the responseStatus reason is notfound</strong></p>
+<p>We can use different ways to find the answer for the question. Below is one possible solution.</p>
+<ol>
+<li>
+<p>Write <strong>sourceIPs: 172.16.0.3</strong>  in the <strong>search textbox</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Add Filter</strong> and select <strong>responseStatus.reason</strong> and <strong>is</strong> under <strong>field</strong> and <strong>Operator</strong> dropdown menus respectively. Finally, enter
+<strong>notfound</strong> under <strong>Value</strong> input box and click <strong>Save</strong>. The following figure shows the details.</p>
+<p><img alt="Discover Filter" src="../../img/discover_filter.png" /></p>
+</li>
+<li>
+<p>To enter the 20 hours, click part that is labelled <strong>Time</strong> in the <strong>Discover</strong> figure above, then enter <strong>20</strong> under the input box and select <strong>hours</strong> in the dropdown menu. Make sure that you are under <strong>Relative</strong> tab. Finally, click <strong>update</strong>. The following figure shows how to set the hours. Note that the data will be automatically updated as time passes to reflect the past 20 hours data from the current time.</p>
+<p><img alt="Discover Time" src="../../img/discover_hours.png" /></p>
+</li>
+</ol>
+<p>Once you are done, you will see a result similar to the following figure.</p>
+<p><img alt="Kibana" src="../../img/discover_filter_hours_result.png" /></p>
+<h4 id="visualize">Visualize<a class="headerlink" href="#visualize" title="Permanent link">&para;</a></h4>
+<p>The <strong>Visualize</strong> component in OpenSearch Dashboards is to create different visualizations. Let us create a couple of visualizations.</p>
+<p>To create visualizations:</p>
+<ol>
+<li>Open the sidebar and click <strong>Visualize</strong> under OpenSearch Dashboards.</li>
+<li>Click <strong>Create visualization</strong> link located on the top right side of the page.</li>
+<li>Select a visualization type, we will use <strong>Pie</strong> here.</li>
+<li>Choose the index name or saved query name, if any,  under <strong>New Pie / Choose a source</strong>. We will use the <strong>Kubernetes</strong> index here.</li>
+</ol>
+<p>By default a pie chart with the total number of logs will be provided by OpenSearch Dashboards. Let us divide the pie chart based on the number of logs contributed by each <strong>namespace</strong>. To do that perform the following steps:</p>
+<ol>
+<li>
+<p>Under <strong>Buckets</strong> click <strong>add</strong> then <strong>Split Slices</strong>. See the figure below.</p>
+<p><img alt="Visualize Bucket" src="../../img/add_bucket.png" /></p>
+</li>
+<li>
+<p>Under <strong>aggregation</strong> select <strong>Significant Terms</strong> terms. see the figure below.</p>
+<p><img alt="Visualize Aggregation" src="../../img/aggregation.png" /></p>
+</li>
+<li>
+<p>Select <strong>Kubernetes.namespace_name.keyword</strong> under <strong>field</strong>. See the figure below.</p>
+<p><img alt="Visualize Fields" src="../../img/namespace.png" /></p>
+</li>
+</ol>
+<p>The final result will look like the following figure.</p>
+<p><img alt="Visualize Namespace Pie" src="../../img/namespace_pie.png" /></p>
+<p>Please save the pie chart as we will use it later.</p>
+<p>Let us create a similar pie chart using <strong>host</strong> instead of <strong>namespace</strong>. The chart will look like the following figure.</p>
+<p><img alt="Visualize Host Pie" src="../../img/host_pie.png" /></p>
+<h4 id="dashboard">Dashboard<a class="headerlink" href="#dashboard" title="Permanent link">&para;</a></h4>
+<p>The <strong>Dashboard</strong> component in OpenSearch Dashboards is used for organizing related visualizations together.</p>
+<p>Let us bring the two visualizations that we created above together in a single dashboard.</p>
+<p>To do that:</p>
+<ol>
+<li>Open the sidebar and click <strong>Dashboard</strong> under OpenSearch Dashboards.</li>
+<li>Click <strong>Create Dashboard</strong> link located on the top right side of the page.</li>
+<li>Click <strong>Add existing</strong> link located on the left side.</li>
+<li>Select the name of the two charts/visualizations that you created above.</li>
+</ol>
+<p>The figure below shows the dashboard generated from the above steps showing the two pie charts in a single page.</p>
+<p><img alt="Dashboard" src="../../img/dashboard.png" /></p>
+<h2 id="accessing-falco-and-opa-logs">Accessing Falco and OPA Logs<a class="headerlink" href="#accessing-falco-and-opa-logs" title="Permanent link">&para;</a></h2>
+<p>To access Falco or OPA logs, go to the  <strong>Discover</strong> panel and write <strong>Falco</strong> or <strong>OPA</strong> on the <strong>search textbox</strong>.  Make sure that  the <strong>Kubernetes</strong> log index category is selected.</p>
+<p>The figure below shows  the search result for <strong>Falco</strong> logs.
+<img alt="Falco logs" src="../../img/falco_log.png" /></p>
+<p>The figure below shows the search result for <strong>OPA</strong> logs.
+<img alt="OPA logs" src="../../img/opa_log.png" /></p>
+<h2 id="handling-mapping-conflicts">Handling Mapping Conflicts<a class="headerlink" href="#handling-mapping-conflicts" title="Permanent link">&para;</a></h2>
+<p>If you get the following error:</p>
+<div class="highlight"><pre><span></span><code>Mapping conflict! A field is defined as several types (string,
+integer, etc) across the indices that match this pattern. You may still
+be able to use these conflict fields in parts of Kibana, but they will
+be unavailable for functions that require Kibana to know their type.
+Correcting this issue will require re-indexing your data.
+</code></pre></div>
+<p>This means that your application has changed the type of a field in your structured logs. For example, say version A of your application logs the HTTP request path in <code>request</code>. Later, version B logs the HTTP request path in <code>request.path</code> and the HTTP verb in <code>request.verb</code>. Essentially, <code>request</code> has changed from string to dictionary.</p>
+<p>As a first step, review your application change management policy to reduce the chance of a log field changing type.</p>
+<p>Second, ask your administrator to re-index the affected indices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Re-indexing requires a lot of permissions, including creating and deleting indices, and changing Index templates. This may interfere with audit logs and <a href="/compliantkubernetes/user-guide/demarcation/">compromise platform security</a>. Therefore, to ensure platform security, re-indexing can only be performed by Compliant Kubernetes administrators.</p>
+</div>
+<h2 id="running-example">Running Example<a class="headerlink" href="#running-example" title="Permanent link">&para;</a></h2>
+<!--user-demo-logs-start-->
+
+<p>The user demo application already includes structured logging: For each HTTP request, it logs the URL, the user agent, etc. Compliant Kubernetes further adds the Pod name, Helm Chart name, Helm Release name, etc. to each log entry.</p>
+<p>The screenshot below gives an example of log entries produced by the user demo application. It was obtained by using the index pattern <code>kubernetes*</code> and the filter <code>kubernetes.labels.app_kubernetes_io/instance:myapp</code>.</p>
+<p><img alt="Example of User Demo Logs" src="/compliantkubernetes/img/user-demo-logs.jpeg" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may want to save frequently used searches as dashboards. Compliant Kubernetes saves and backs these up for you.</p>
+</div>
+<!--user-demo-logs-end-->
+
+<h2 id="exporting-logs">Exporting logs<a class="headerlink" href="#exporting-logs" title="Permanent link">&para;</a></h2>
+<p>At the moment the reporting feature in OpenSearch doesn't work so instead we recommend you to use <a href="https://github.com/elasticsearch-dump/elasticsearch-dump">elasticsearch-dump</a>.</p>
+<p>Example of exporting the <code>kubernetes-*</code> index pattern to a folder <code>opensearch-dump</code>:</p>
+<div class="highlight"><pre><span></span><code>docker pull elasticdump/elasticsearch-dump
+mkdir opensearch-dump
+
+<span class="c1"># OpenSearch username and password</span>
+<span class="c1"># This will be handed out from your Compliant Kubernetes administrator</span>
+<span class="nv">OPENSEARCH_USERNAME</span><span class="o">=</span><span class="s2">&quot;your-username&quot;</span>
+<span class="nv">OPENSEARCH_PASSWORD</span><span class="o">=</span><span class="s2">&quot;your-password&quot;</span>
+
+<span class="c1"># Your domain that is used for your cluster.</span>
+<span class="c1"># This is the same as the one you are using for your other services (grafana, harbor, etc.)</span>
+<span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;your-domain&quot;</span>
+
+docker run --rm -ti -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/opensearch-dump:/tmp elasticdump/elasticsearch-dump <span class="se">\</span>
+  --input<span class="o">=</span><span class="s2">&quot;http://</span><span class="si">${</span><span class="nv">OPENSEARCH_USERNAME</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">OPENSEARCH_PASSWORD</span><span class="si">}</span><span class="s2">@opensearch.ops.</span><span class="si">${</span><span class="nv">DOMAIN</span><span class="si">}</span><span class="s2">/kubernetes-*&quot;</span> <span class="se">\</span>
+  --type<span class="o">=</span>data <span class="se">\</span>
+  --output<span class="o">=</span>/tmp/opensearch-dump.json <span class="se">\</span>
+  --searchBody<span class="o">=</span><span class="s1">&#39;{&quot;query&quot;:{......}}&#39;</span>
+</code></pre></div>
+<p>For more examples and how to use the tool, read the documentation <a href="https://github.com/elasticsearch-dump/elasticsearch-dump#use">in the repo</a>.</p>
+<h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://opensearch.org/">OpenSearch</a></li>
+<li><a href="https://opensearch.org/docs/latest/dashboards/index/">OpenSearch Dashboards</a></li>
+<li><a href="https://opendistro.github.io/for-elasticsearch/">Open Distro for Elasticsearch</a></li>
+<li><a href="https://opendistro.github.io/for-elasticsearch-docs/docs/kibana/">Kibana</a></li>
+<li><a href="https://logz.io/blog/open-distro-for-elasticsearch/">Open Distro for Elasticsearch – How Different Is It?</a></li>
+<li><a href="https://www.fluentd.org/">Fluentd</a></li>
+</ul>
+
+
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../kubernetes-ui/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Kubernetes UI (Lens)" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Kubernetes UI (Lens)
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../log-based-alerts/" class="md-footer__link md-footer__link--next" aria-label="Next: Log-based Alerts" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Log-based Alerts
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2022 Elastisys AB <br/> Kubernetes® is a registered trademark of The Linux Foundation in the United States and other countries, and is used pursuant to a license from The Linux Foundation. <br/> Postgres and PostgreSQL and the Elephant Logo (Slonik) are all registered trademarks of the PostgreSQL Community Association of Canada. <br/> Redis is a trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by the Compliant Kubernetes project is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Compliant Kubernetes project. <br/> RabbitMQ is a trademark of VMware, Inc. in the U.S. and other countries. <br/> TimescaleDB and the EON mascot are trademarks of <a href="https://www.timescale.com/">Timescale, Inc.</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.2ab50757.min.js"></script>
+      
+    
+  </body>
+</html>
