@@ -11,18 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Python dependencies
-        run: python3 -m pip install -r ./requirements.txt
-
-      - name: Configure Git user
-        run: |
-          git config --local user.email "${GITHUB_ACTOR}@users.noreply.${GITHUB_DOMAIN:-"github.com"}"
-          git config --local user.name "${GITHUB_ACTOR}"
-
-      - name: Configure Git user
-        run: git fetch origin gh-pages --depth=1
-
-      - name: Deploy with mike 🚀
-        run: |
-          mike deploy compliantkubernetes ck8s -t 'main'
-          mike set-default compliantkubernetes --push
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
